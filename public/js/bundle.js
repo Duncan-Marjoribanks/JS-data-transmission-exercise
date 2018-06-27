@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const SelectView = __webpack_require__(/*! ./views/select_view.js */ \"./src/views/select_view.js\");\nconst InstrumentFamilies = __webpack_require__(/*! ./models/instrument_families.js */ \"./src/models/instrument_families.js\");\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  console.log('JavaScript Loaded');\n\n  const selectElement = document.querySelector('#instrument-families');\n  const dropDown = new SelectView(selectElement);\n  dropDown.bindEvents();\n\n  const instrumentDataSource = new InstrumentFamilies();\n  instrumentDataSource.bindEvents();\n\n\n\n});\n\n\n//# sourceURL=webpack:///./src/app.js?");
+eval("const SelectView = __webpack_require__(/*! ./views/select_view.js */ \"./src/views/select_view.js\");\nconst InfoView = __webpack_require__(/*! ./views/info_view.js */ \"./src/views/info_view.js\");\nconst InstrumentFamilies = __webpack_require__(/*! ./models/instrument_families.js */ \"./src/models/instrument_families.js\");\n\ndocument.addEventListener('DOMContentLoaded', () =>{\n  console.log('JavaScript Loaded');\n\n  const selectElement = document.querySelector('#instrument-families');\n  const dropDown = new SelectView(selectElement);\n  dropDown.bindEvents();\n\n  const instrumentDataSource = new InstrumentFamilies();\n  instrumentDataSource.bindEvents();\n\n  const instrumentInfo = document.querySelector('#instrument_families');\n  const infoView = new InfoView(instrumentInfo);\n  infoView.bindEvents();\n\n});\n\n\n//# sourceURL=webpack:///./src/app.js?");
 
 /***/ }),
 
@@ -119,6 +119,17 @@ eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/he
 
 /***/ }),
 
+/***/ "./src/views/info_view.js":
+/*!********************************!*\
+  !*** ./src/views/info_view.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\n\nconst InfoView = function(){\n\n}\n\n\n\nInfoView.prototype.bindEvents = function () {\n  PubSub.subscribe('InstrumentFamilies:selected', (evt) => {\n    const instrument = evt.detail;\n    const newInfo = createElement('p')\n    newInfo.textContent = instrument;\n    this.appendChild(newInfo);\n  })\n};\n\n\nmodule.exports = InfoView;\n\n\n//# sourceURL=webpack:///./src/views/info_view.js?");
+
+/***/ }),
+
 /***/ "./src/views/select_view.js":
 /*!**********************************!*\
   !*** ./src/views/select_view.js ***!
@@ -126,7 +137,7 @@ eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/he
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\n\n\nconst SelectView = function(element){\nthis.element = element;\nconsole.log(this.element);\n};\n\nSelectView.prototype.bindEvents = function(){\n  PubSub.subscribe('Instrument-families:data', (evt) =>{\n    const instrumentObjects = evt.detail;\n    console.log(evt);\n    this.populate(instrumentObjects);\n  })\n};\n\nthis.element.addEventListener('change', (evt) =>{\n  const selectedIndex = evt.target.value;\n  PubSub.publish('SelectView:change', selectedIndex);\n});\n\n\nSelectView.prototype.populate = function(instrumentsData){\n  console.log(instrumentsData);\n  instrumentsData.forEach((instrument, index) =>{\n    const option = document.createElement('option');\n    option.textContent = instrument.name;\n    option.value = index;\n    this.element.appendChild(option);\n  })\n}\n\nmodule.exports = SelectView;\n\n\n//# sourceURL=webpack:///./src/views/select_view.js?");
+eval("const PubSub = __webpack_require__(/*! ../helpers/pub_sub.js */ \"./src/helpers/pub_sub.js\");\n\n\nconst SelectView = function(element){\nthis.element = element;\nconsole.log(this.element);\n};\n\n\nSelectView.prototype.bindEvents = function(){\n  PubSub.subscribe('Instrument-families:data', (evt) =>{\n    const instrumentObjects = evt.detail;\n    console.log(evt);\n    this.populate(instrumentObjects);\n  })\n  \n  this.element.addEventListener('change', (evt) =>{\n    const selectedIndex = evt.target.value;\n    PubSub.publish('SelectView:change', selectedIndex);\n  });\n};\n\n\n\n\n\nSelectView.prototype.populate = function(instrumentsData){\n  console.log(instrumentsData);\n  instrumentsData.forEach((instrument, index) =>{\n    const option = document.createElement('option');\n    option.textContent = instrument.name;\n    option.value = index;\n    this.element.appendChild(option);\n  })\n}\n\n\nmodule.exports = SelectView;\n\n\n//# sourceURL=webpack:///./src/views/select_view.js?");
 
 /***/ })
 

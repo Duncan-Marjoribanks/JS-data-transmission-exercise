@@ -6,18 +6,22 @@ this.element = element;
 console.log(this.element);
 };
 
+
 SelectView.prototype.bindEvents = function(){
   PubSub.subscribe('Instrument-families:data', (evt) =>{
     const instrumentObjects = evt.detail;
     console.log(evt);
     this.populate(instrumentObjects);
   })
+  
+  this.element.addEventListener('change', (evt) =>{
+    const selectedIndex = evt.target.value;
+    PubSub.publish('SelectView:change', selectedIndex);
+  });
 };
 
-this.element.addEventListener('change', (evt) =>{
-  const selectedIndex = evt.target.value;
-  PubSub.publish('SelectView:change', selectedIndex);
-});
+
+
 
 
 SelectView.prototype.populate = function(instrumentsData){
@@ -29,5 +33,6 @@ SelectView.prototype.populate = function(instrumentsData){
     this.element.appendChild(option);
   })
 }
+
 
 module.exports = SelectView;
